@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{%block content %}
+<div class=" container d-flex flex-column justify-content-center">
+  <form action="/pay" method="POST">
+  <div class="component input-group">
+    <input type="text" name="amount" class="form-control" >
+    <select class="form-select input-group-text" name="currency">
+      <option selected>Выберите валюту платежа</option>
+      <option value="978">EUR</option>
+      <option value="840">USD</option>
+      <option value="643">RUB</option>
+    </select>
+  </div>
+  <div class="component input-group">
+    <textarea class="form-control" name="description" placeholder="Комментарий" rows="5"></textarea>
+  </div>
+  <div class="component d-flex flex-row-reverse">
+    <button type="submit" class="btn btn-primary btn-lg">Оплатить</button>
+  </div>
+</form>
+</div>
+{%endblock%}

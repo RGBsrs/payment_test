@@ -1,6 +1,6 @@
 import config
 import logging
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -13,6 +13,9 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from src.database import models
+from src.payments import payments
+
+app.register_blueprint(payments)
 
 
 def setup_logger():
@@ -21,7 +24,7 @@ def setup_logger():
 
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler('site.log')
+    file_handler = logging.FileHandler('src/logs/site.log')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 
