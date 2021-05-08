@@ -1,9 +1,9 @@
-from flask.helpers import url_for
+from logging import error
 import requests
-from flask import Blueprint, render_template, request, redirect
-from werkzeug.datastructures import ViewItems
+from flask import Blueprint, render_template, request, redirect, flash
 
 from src.services.payment_service import generate_sign_for_payment
+from src import logger
 
 payments = Blueprint('payments', __name__)
 shop_id = '5' 
@@ -30,9 +30,10 @@ def process_payment():
                                         data['shop_id'],
                                         data['shop_order_id']])
         data['sign'] = sign
-        print(data)
+        logger.info(f"Currency: {data['currency']}, Amount:{data['amount']}, Description {data['description']}")
         return render_template('pay.html', data = data, url = 'https://pay.piastrix.com/ru/pay',
                                 method = 'POST')
+                                
     elif currency == '840':
         data = {
             'payer_currency' : int(currency),
@@ -50,8 +51,10 @@ def process_payment():
                                         ])
         data['sign'] = sign
         resp = requests.post('https://core.piastrix.com/bill/create', json = data,
-                            headers={'Content-Type': 'application/json'})
+                            headers={'Content-Type': 'application/json'})  
+        logger.info(f"Currency: {data['shop_currency']}, Amount:{data['shop_amount']}, Description {data['description']}")
         return redirect(resp.json()['data']['url'])
+
     elif currency == '643':
         data = {
             'currency' : int(currency),
@@ -70,7 +73,7 @@ def process_payment():
         data['sign'] = sign
         resp = requests.post('https://core.piastrix.com/invoice/create', json = data,
                             headers={'Content-Type': 'application/json'})
-        print(resp.json())
+        logger.info(f"Currency: {data['currency']}, Amount:{data['amount']}, Description {data['description']}")
         return render_template('pay.html', data = resp.json()['data']['data'],
                                 method = resp.json()['data']['method'],
                                 url = resp.json()['data']['url'], )

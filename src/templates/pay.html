@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 
 {%block content %}
-<div class=" container d-flex flex-column justify-content-center"></div>
+<div class=" container d-flex flex-column justify-content-center">
 <form name= "Pay" method={{method}} action={{url}}>
+    <div class="component d-flex justify-content-center">
+        {% if 'ac_amount' in data.keys() %}
+        <p class="fs-2">Оплатить {{ data['ac_amount'] }} RUB</p>
+        {%else%}
+        <p class="fs-2">Оплатить {{ data['amount'] }} EUR</p>
+        {%endif%}
+    </div>
     {% for name, value in data.items() %}
-    <input type = "hidden"  name = {{name}} value = {{value}}/>
+    <input type = "hidden" name = {{name}} value = {{value}}></input>
     {% endfor %}
     <div class="component d-flex justify-content-center">
         <button type="submit" class="btn btn-success btn-lg">Перейти на страницу оплаты</button>

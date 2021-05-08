@@ -12,19 +12,15 @@ app.config.from_object(config.Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from src.database import models
-from src.payments import payments
-
-app.register_blueprint(payments)
 
 
 def setup_logger():
     logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler('src/logs/site.log')
+    file_handler = logging.FileHandler('src/logs/transactions.log')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 
@@ -32,3 +28,8 @@ def setup_logger():
 
 
 logger = setup_logger()
+
+from src.database import models
+from src.payments import payments
+
+app.register_blueprint(payments)
