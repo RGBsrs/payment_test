@@ -1,5 +1,7 @@
+from flask.helpers import url_for
 import requests
 from flask import Blueprint, render_template, request, redirect
+from werkzeug.datastructures import ViewItems
 
 from src.services.payment_service import generate_sign_for_payment
 
@@ -18,7 +20,7 @@ def process_payment():
     if currency == '978':
         data = {
             'currency' : currency,
-            'amount': request.form.get('amount', ''),
+            'amount': str(float(request.form.get('amount', ''))),
             'shop_id' : shop_id,
             'shop_order_id': '101',
             'description': request.form.get('description', '')
@@ -27,6 +29,50 @@ def process_payment():
                                         data['currency'],
                                         data['shop_id'],
                                         data['shop_order_id']])
-        data['sing'] = sign
-        #resp = requests.post('https://pay.piastrix.com/ru/pay', data=data)
-        return render_template('pay.html', data = data)
+        data['sign'] = sign
+        print(data)
+        return render_template('pay.html', data = data, url = 'https://pay.piastrix.com/ru/pay',
+                                method = 'POST')
+    elif currency == '840':
+        data = {
+            'payer_currency' : int(currency),
+            'shop_currency' : int(currency),
+            'shop_amount': str(float(request.form.get('amount', ''))),
+            'shop_id' : shop_id,
+            'shop_order_id': 101,
+            'description': request.form.get('description', '')
+        }
+        sign = generate_sign_for_payment([data['payer_currency'],
+                                        data['shop_amount'],
+                                        data['shop_currency'],
+                                        data['shop_id'],
+                                        data['shop_order_id']
+                                        ])
+        data['sign'] = sign
+        resp = requests.post('https://core.piastrix.com/bill/create', json = data,
+                            headers={'Content-Type': 'application/json'})
+        return redirect(resp.json()['data']['url'])
+    elif currency == '643':
+        data = {
+            'currency' : int(currency),
+            'payway' : payway,
+            'amount' : str(float(request.form.get('amount', ''))),
+            'shop_id' : shop_id,
+            'shop_order_id': 101,
+            'description': request.form.get('description', '')
+        }
+        sign = generate_sign_for_payment([data['amount'],
+                                        data['currency'],
+                                        data['payway'],
+                                        data['shop_id'],
+                                        data['shop_order_id']
+                                        ])
+        data['sign'] = sign
+        resp = requests.post('https://core.piastrix.com/invoice/create', json = data,
+                            headers={'Content-Type': 'application/json'})
+        print(resp.json())
+        return render_template('pay.html', data = resp.json()['data']['data'],
+                                method = resp.json()['data']['method'],
+                                url = resp.json()['data']['url'], )
+    return render_template('index.html') 
+
