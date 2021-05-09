@@ -130,3 +130,6 @@ dmypy.json
 
 #database 
 data/*
+
+#logs
+logs/*

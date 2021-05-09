@@ -16,11 +16,11 @@ migrate = Migrate(app, db)
 
 def setup_logger():
     logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler('src/logs/transactions.log')
+    file_handler = logging.FileHandler('src/logs/errors.log')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 

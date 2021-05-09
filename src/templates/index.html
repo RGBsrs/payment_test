@@ -2,9 +2,17 @@
 
 {%block content %}
 <div class=" container d-flex flex-column justify-content-center">
+  {%if message%}
+  <div class="alert alert-danger alter-dismissable fade show" role="alert">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {%endif%}
   <form action="/pay" method="POST">
   <div class="component input-group">
-    <input type="text" name="amount" class="form-control" >
+    <input type="number" name="amount" placeholder = "0.00" min="1.0" class="form-control" >
     <select class="form-select input-group-text" name="currency">
       <option selected>Выберите валюту платежа</option>
       <option value="978">EUR</option>
