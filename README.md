@@ -4,8 +4,6 @@ Web version of a part of this project available on [Heroku](http://flask-api-cou
  
 If you want test this project on your local machine run the following commands:
 
-> git init
-> 
 > git clone https://github.com/RGBsrs/payment_test.git
 > 
 Then create virtual enviroment:
