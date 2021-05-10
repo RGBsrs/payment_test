@@ -1,0 +1,1 @@
+Time: 2021-05-10 16:16:23.061942,Currency: 643,Amount:15.0, Description , payment_id: 11
