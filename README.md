@@ -1,6 +1,6 @@
 # payment_test
 
-Web version of a part of this project available on [Heroku](http://flask-api-course.herokuapp.com/swagger/)
+Web version of a part of this project available on [Heroku](http://payment-test-site.herokuapp.com/)
  
 If you want test this project on your local machine run the following commands:
 
