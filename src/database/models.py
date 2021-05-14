@@ -2,7 +2,7 @@ import datetime
 from src import db
 
 
-class Payment(db.Model):
+class PaymentInfo(db.Model):
     __tablename__ = "payments"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
