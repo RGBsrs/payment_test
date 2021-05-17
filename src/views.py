@@ -76,4 +76,4 @@ def process_payment():
                 )
 
     else:
-        return render_template("index.html", message="Упс, что-то пошло не так.")
+        return render_template("index.html")
