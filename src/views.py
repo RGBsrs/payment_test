@@ -12,6 +12,7 @@ views = Blueprint("views", __name__)
 @views.route("/", methods=["POST", "GET"])
 def process_payment():
     if request.method == "POST":
+
         currency = request.form.get("currency", "")
         amount = request.form.get("amount", "")
 
@@ -54,7 +55,7 @@ def process_payment():
             if not resp.json()["result"]:
                 logger.info(f"Piastrix error {resp['message']} : {resp['error_code']}")
                 render_template("index.html", message=resp["message"])
-            
+
             # EUR payment
             if currency == "840":
                 return redirect(resp.json()["data"]["url"])
@@ -67,5 +68,6 @@ def process_payment():
                     method=resp.json()["data"]["method"],
                     url=resp.json()["data"]["url"],
                 )
+
     else:
         return render_template("index.html")
