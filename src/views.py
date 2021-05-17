@@ -1,24 +1,28 @@
 import datetime
+from flask.signals import message_flashed
 import requests
 from flask import Blueprint, render_template, request, redirect
 
 from src import logger, db, logger
 from src.resourses.payments import Payment
 from src.database.models import PaymentInfo
+from src.forms.payment import PaymentForm
 
 views = Blueprint("views", __name__)
 
 
 @views.route("/", methods=["POST", "GET"])
 def process_payment():
-    if request.method == "POST":
-
-        currency = request.form.get("currency", "")
-        amount = request.form.get("amount", "")
+    form = PaymentForm(request.form)
+    if request.method == "POST" and form.validate():
+        currency = form.currency.data
+        amount = form.amount.data
+        # currency = request.form.get("currency", "")
+        # amount = request.form.get("amount", "")
 
         payment = Payment(str(currency), float(amount))
         fields, url = payment.prepare_payment_data()
-        fields["description"] = request.form.get("description", "")
+        fields["description"] = form.description.data
 
         try:
             payment_info = PaymentInfo(
@@ -49,12 +53,14 @@ def process_payment():
             resp = requests.post(url, json=fields)
             if not resp:
                 logger.info("Not connection")
-                render_template(
+                return render_template(
                     "index.html", message="Нет соединения с сервером оплаты."
                 )
             if not resp.json()["result"]:
-                logger.info(f"Piastrix error {resp['message']} : {resp['error_code']}")
-                render_template("index.html", message=resp["message"])
+                logger.info(
+                    f"Piastrix error {resp.json()['message']} : {resp.json()['error_code']}"
+                )
+                return render_template("index.html", message=resp.json()["message"])
 
             # EUR payment
             if currency == "840":
@@ -70,4 +76,4 @@ def process_payment():
                 )
 
     else:
-        return render_template("index.html")
+        return render_template("index.html", message="Упс, что-то пошло не так.")
