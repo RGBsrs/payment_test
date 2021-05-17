@@ -1,3 +1,4 @@
+import os
 import config
 import logging
 from flask import Flask
@@ -11,6 +12,8 @@ app.config.from_object(config.Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+if not os.path.exists('src/logs/'):
+    os.mkdir('src/logs/')
 
 def setup_logger():
     logger = logging.getLogger(__name__)
