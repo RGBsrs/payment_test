@@ -43,17 +43,6 @@ def process_payment():
         if currency == "978":
             return render_template("pay.html", data=fields, url=url, method="POST")
 
-        elif currency == "840":
-            resp = requests.post(url, json=fields)
-            if not resp:
-                logger.info("Not connection")
-                render_template("index.html", message="Нет соединения с сервером оплаты.")
-            if not resp.json()['result']:
-                logger.info(f"Piastrix error {resp['message']} : {resp['error_code']}")
-                render_template("index.html", message=resp["message"])
-            else:
-                return redirect(resp.json()["data"]["url"])
-
         else:
             resp = requests.post(url, json=fields)
             if not resp:
@@ -62,6 +51,8 @@ def process_payment():
             if not resp.json()['result']:
                 logger.info(f"Piastrix error {resp['message']} : {resp['error_code']}")
                 render_template("index.html", message=resp["message"])
+            if currency == "840":
+                return redirect(resp.json()["data"]["url"])
             else:
                 return render_template(
                     "pay.html",
