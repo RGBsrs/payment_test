@@ -6,7 +6,7 @@ class PaymentForm(Form):
         "amount",
         [
             validators.number_range(min=0.01),
-            validators.DataRequired(message="Not correct amount"),
+            validators.DataRequired(message="Укажите верную сумму"),
         ],
     )
     currency = SelectField(

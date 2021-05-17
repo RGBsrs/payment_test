@@ -76,4 +76,4 @@ def process_payment():
                 )
 
     else:
-        return render_template("index.html")
+        return render_template("index.html", form = form)

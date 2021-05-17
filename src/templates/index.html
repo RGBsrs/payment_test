@@ -7,6 +7,13 @@
     {{ message }}
   </div>
   {%endif%}
+  {%if form.amount.errors%}
+  {%for error in form.amount.errors %}
+  <div class="alert alert-danger alter-dismissable fade show" role="alert">
+    {{ error }}
+  </div>
+  {%endfor%}
+  {%endif%}
   <form action="/" method="POST">
   <div class="component input-group">
     <input type="number" name="amount" placeholder = "0.00" min="0.01" step="0.01" class="form-control" >
@@ -23,6 +30,7 @@
   <div class="component d-flex flex-row-reverse">
     <button type="submit" class="btn btn-primary btn-lg">Оплатить</button>
   </div>
+
   </form>
 </div>
 {%endblock%}
