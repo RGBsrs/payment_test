@@ -29,17 +29,18 @@ def process_payment():
             db.session.flush()
             db.session.commit()
             logger.info(
-                f'Time: {datetime.datetime.now()}\n'
-                f'Currency: {payment.currency_code}\n'
-                f'Amount:{payment.amount}\n'
+                f"Time: {datetime.datetime.now()}\n"
+                f"Currency: {payment.currency_code}\n"
+                f"Amount:{payment.amount}\n"
                 f'Description {fields["description"]}\n'
-                f'payment_id: {payment_info.id}\n'
+                f"payment_id: {payment_info.id}\n"
             )
         except Exception as e:
             db.session.rollback()
             logger.error(e)
             render_template("index.html", message="Упс, что-то пошло не так.")
 
+        # USD payment
         if currency == "978":
             return render_template("pay.html", data=fields, url=url, method="POST")
 
@@ -47,12 +48,18 @@ def process_payment():
             resp = requests.post(url, json=fields)
             if not resp:
                 logger.info("Not connection")
-                render_template("index.html", message="Нет соединения с сервером оплаты.")
-            if not resp.json()['result']:
+                render_template(
+                    "index.html", message="Нет соединения с сервером оплаты."
+                )
+            if not resp.json()["result"]:
                 logger.info(f"Piastrix error {resp['message']} : {resp['error_code']}")
                 render_template("index.html", message=resp["message"])
+            
+            # EUR payment
             if currency == "840":
                 return redirect(resp.json()["data"]["url"])
+
+            # RUB payment
             else:
                 return render_template(
                     "pay.html",
