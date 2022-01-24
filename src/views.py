@@ -1,7 +1,6 @@
 import datetime
-from flask.signals import message_flashed
 import requests
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, jsonify
 
 from src import logger, db, logger
 from src.resourses.payments import Payment
@@ -77,3 +76,8 @@ def process_payment():
 
     else:
         return render_template("index.html", form = form)
+
+
+@views.route('/messages_left')
+def messages_left():
+    return jsonify({'messages_left':5}),200
