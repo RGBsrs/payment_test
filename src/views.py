@@ -80,4 +80,4 @@ def process_payment():
 
 @views.route('/messages_left')
 def messages_left():
-    return jsonify({'messages_left':5}),200
+    return jsonify({'messages_left':'5'}),200
