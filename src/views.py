@@ -87,7 +87,7 @@ def messages_left():
 
 @views.route('/match_message', methods=["POST", "GET"])
 def match_message():
-    data = request.get_json()
+    data = request.get_json(force=True)
     if data:
         message = data.get('message', '')
         author = data.get('author', '')
