@@ -87,15 +87,17 @@ def messages_left():
 
 @views.route('/message_compare')
 def message_compare():
-    message = request.get('message', '')
-    author = request.get('author', '')
-    if message:
-        ocr_message = request.get('ocr_message', '')
-        if ocr_message:
-            ocr_message = re.sub("[0-9]{1}[\/,:][0-9]{2}|PM|AM", '', ocr_message)
-            ocr_message = ocr_message.split(author)[-1]
-            matching = levenshtein.normalized_similarity(message, ocr_message)
-            return jsonify({'matching_score': str(matching),
-                            'cleaned_message': ocr_message}), 200
-        return jsonify({'error': 'nothing to match'}), 405
+    data = request.get_json()
+    if data:
+        message = data.get('message', '')
+        author = data.get('author', '')
+        if message:
+            ocr_message = data.get('ocr_message', '')
+            if ocr_message:
+                ocr_message = re.sub("[0-9]{1}[\/,:][0-9]{2}|PM|AM", '', ocr_message)
+                ocr_message = ocr_message.split(author)[-1]
+                matching = levenshtein.normalized_similarity(message, ocr_message)
+                return jsonify({'matching_score': str(matching),
+                                'cleaned_message': ocr_message}), 200
+            return jsonify({'error': 'nothing to match'}), 405
     return jsonify({'error': 'no data to match'}), 405
