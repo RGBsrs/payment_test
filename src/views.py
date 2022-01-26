@@ -1,5 +1,8 @@
+import re
 import datetime
 import requests
+
+from textdistance import levenshtein
 from flask import Blueprint, render_template, request, redirect, jsonify
 
 from src import logger, db, logger
@@ -81,3 +84,18 @@ def process_payment():
 @views.route('/messages_left')
 def messages_left():
     return jsonify({'messages_left':'5'}),200
+
+@views.route('/message_compare')
+def message_compare():
+    message = request.get('message', '')
+    author = request.get('author', '')
+    if message:
+        ocr_message = request.get('ocr_message', '')
+        if ocr_message:
+            ocr_message = re.sub("[0-9]{1}[\/,:][0-9]{2}|PM|AM", '', ocr_message)
+            ocr_message = ocr_message.split(author)[-1]
+            matching = levenshtein.normalized_similarity(message, ocr_message)
+            return jsonify({'matching_score': str(matching),
+                            'cleaned_message': ocr_message}), 200
+        return jsonify({'error': 'nothing to match'}), 405
+    return jsonify({'error': 'no data to match'}), 405
