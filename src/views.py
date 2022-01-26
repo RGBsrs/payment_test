@@ -85,7 +85,7 @@ def process_payment():
 def messages_left():
     return jsonify({'messages_left':'5'}),200
 
-@views.route('/match_message')
+@views.route('/match_message', methods=["POST", "GET"])
 def match_message():
     data = request.get_json()
     if data:
