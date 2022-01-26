@@ -85,8 +85,8 @@ def process_payment():
 def messages_left():
     return jsonify({'messages_left':'5'}),200
 
-@views.route('/message_compare')
-def message_compare():
+@views.route('/match_message')
+def match_message():
     data = request.get_json()
     if data:
         message = data.get('message', '')
@@ -99,5 +99,5 @@ def message_compare():
                 matching = levenshtein.normalized_similarity(message, ocr_message)
                 return jsonify({'matching_score': str(matching),
                                 'cleaned_message': ocr_message}), 200
-            return jsonify({'error': 'nothing to match'}), 405
+            return jsonify({'error': 'no message to match'}), 405
     return jsonify({'error': 'no data to match'}), 405
