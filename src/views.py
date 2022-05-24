@@ -81,23 +81,34 @@ def process_payment():
         return render_template("index.html", form = form)
 
 
-@views.route('/messages_left')
-def messages_left():
-    return jsonify({'messages_left':'5'}),200
+# @views.route('/messages_left')
+# def messages_left():
+#     return jsonify({'messages_left':'5'}),200
 
-@views.route('/match_message', methods=["POST", "GET"])
-def match_message():
+# @views.route('/match_message', methods=["POST", "GET"])
+# def match_message():
+#     data = request.get_json(force=True)
+#     if data:
+#         message = data.get('message', '')
+#         author = data.get('author', '')
+#         if message:
+#             ocr_message = data.get('ocr_message', '')
+#             if ocr_message:
+#                 ocr_message = re.sub("[0-9]{1}[\/,:][0-9]{2}|PM|AM", '', ocr_message)
+#                 ocr_message = ocr_message.split(author)[-1]
+#                 matching = levenshtein.normalized_similarity(message, ocr_message)
+#                 return jsonify({'matching_score': str(matching),
+#                                 'cleaned_message': ocr_message}), 200
+#             return jsonify({'error': 'no message to match'}), 405
+#     return jsonify({'error': 'no data to match'}), 405
+
+
+@views.route('/add_html', methods=["POST"])
+def add_html():
     data = request.get_json(force=True)
     if data:
-        message = data.get('message', '')
-        author = data.get('author', '')
-        if message:
-            ocr_message = data.get('ocr_message', '')
-            if ocr_message:
-                ocr_message = re.sub("[0-9]{1}[\/,:][0-9]{2}|PM|AM", '', ocr_message)
-                ocr_message = ocr_message.split(author)[-1]
-                matching = levenshtein.normalized_similarity(message, ocr_message)
-                return jsonify({'matching_score': str(matching),
-                                'cleaned_message': ocr_message}), 200
-            return jsonify({'error': 'no message to match'}), 405
-    return jsonify({'error': 'no data to match'}), 405
+        html = data.get('html', '')
+        if html:
+            return jsonify({'html': html}), 200
+
+        
